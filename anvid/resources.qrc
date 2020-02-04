@@ -1,0 +1,20 @@
+<!DOCTYPE RCC><RCC version="1.0">
+<qresource>
+    <file>images/logo.png</file>
+    <file>images/new-project.png</file>
+    <file>images/add-dir.png</file>
+    <file>images/delete-file.png</file>
+    <file>images/open-project.png</file>
+    <file>images/save-project.png</file>
+    <file>images/settings.png</file>
+    <file>images/delete.png</file>
+    <file>images/panel-view.png</file>
+    <file>images/export.png</file>
+    <file>images/add.png</file>
+    <file>images/delete.png</file>
+    <file>images/play.png</file>
+    <file>images/pause.png</file>
+    <file>images/step-forward.png</file>
+    <file>images/step-backward.png</file>
+</qresource>
+</RCC>

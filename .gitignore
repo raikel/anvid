@@ -1,0 +1,11 @@
+syntax: glob
+.idea/
+.git/
+anvid/.data/
+anvid/.logs/
+projects/
+recycle/
+*.log
+clean_migrations.sh
+gitpush.sh
+__pycache__
