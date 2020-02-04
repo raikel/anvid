@@ -60,6 +60,7 @@ class Ui_MainWindow:
         self.createDialogs()
 
         self.mainWindow.setWindowIcon(QIcon(values.logoImage))
+        self.mainWindow.setWindowTitle(values.appName)
 
     @property
     def pos(self) -> Tuple[int, int]:

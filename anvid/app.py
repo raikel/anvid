@@ -237,6 +237,7 @@ class MainWindow(QtWidgets.QMainWindow):
             try:
                 self.project.save()
                 self.appSettings.lastProjectPath = savePath
+                self.setCurrentProject()
             except Exception as err:
                 logger.error(err)
                 self.ui.errorMsg(values.saveProjectErrorMessage)
