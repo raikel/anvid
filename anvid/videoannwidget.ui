@@ -15,7 +15,7 @@
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="1,0">
    <item>
-    <layout class="QVBoxLayout" name="verticalLayout" stretch="1,0,0">
+    <layout class="QVBoxLayout" name="verticalLayout" stretch="1,0,0,0">
      <property name="leftMargin">
       <number>4</number>
      </property>
@@ -42,32 +42,27 @@
       </widget>
      </item>
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout">
-       <item>
-        <widget class="QLabel" name="curTimeLabel">
-         <property name="text">
-          <string>00:00:00</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QSlider" name="positionSlider">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="remTimeLabel">
-         <property name="text">
-          <string>00:00:00</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
+      <widget class="SegmentColorBar" name="segmentColorBar">
+       <property name="maximumSize">
+        <size>
+         <width>16777215</width>
+         <height>12</height>
+        </size>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
      </item>
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="0,0,0,0,0,0">
+      <widget class="QSlider" name="positionSlider">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="0,0,0,0,0,0,0">
        <property name="sizeConstraint">
         <enum>QLayout::SetMinimumSize</enum>
        </property>
@@ -152,6 +147,16 @@
          </property>
          <property name="text">
           <string/>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="curTimeLabel">
+         <property name="text">
+          <string>00:00:00</string>
+         </property>
+         <property name="margin">
+          <number>6</number>
          </property>
         </widget>
        </item>
@@ -414,6 +419,11 @@
    <extends>QWidget</extends>
    <header>PyQt5.QtMultimediaWidgets</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>SegmentColorBar</class>
+   <extends>QLabel</extends>
+   <header>widgets</header>
   </customwidget>
  </customwidgets>
  <resources/>

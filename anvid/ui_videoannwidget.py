@@ -28,19 +28,15 @@ class Ui_VideoAnnoWidget(object):
         self.videoWidget.setStyleSheet("background-color: rgb(0, 0, 0);")
         self.videoWidget.setObjectName("videoWidget")
         self.verticalLayout.addWidget(self.videoWidget)
-        self.horizontalLayout = QtWidgets.QHBoxLayout()
-        self.horizontalLayout.setObjectName("horizontalLayout")
-        self.curTimeLabel = QtWidgets.QLabel(VideoAnnoWidget)
-        self.curTimeLabel.setObjectName("curTimeLabel")
-        self.horizontalLayout.addWidget(self.curTimeLabel)
+        self.segmentColorBar = SegmentColorBar(VideoAnnoWidget)
+        self.segmentColorBar.setMaximumSize(QtCore.QSize(16777215, 12))
+        self.segmentColorBar.setText("")
+        self.segmentColorBar.setObjectName("segmentColorBar")
+        self.verticalLayout.addWidget(self.segmentColorBar)
         self.positionSlider = QtWidgets.QSlider(VideoAnnoWidget)
         self.positionSlider.setOrientation(QtCore.Qt.Horizontal)
         self.positionSlider.setObjectName("positionSlider")
-        self.horizontalLayout.addWidget(self.positionSlider)
-        self.remTimeLabel = QtWidgets.QLabel(VideoAnnoWidget)
-        self.remTimeLabel.setObjectName("remTimeLabel")
-        self.horizontalLayout.addWidget(self.remTimeLabel)
-        self.verticalLayout.addLayout(self.horizontalLayout)
+        self.verticalLayout.addWidget(self.positionSlider)
         self.horizontalLayout_2 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_2.setSizeConstraint(QtWidgets.QLayout.SetMinimumSize)
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
@@ -73,6 +69,9 @@ class Ui_VideoAnnoWidget(object):
         self.stepForwardButton.setText("")
         self.stepForwardButton.setObjectName("stepForwardButton")
         self.horizontalLayout_2.addWidget(self.stepForwardButton)
+        self.curTimeLabel = QtWidgets.QLabel(VideoAnnoWidget)
+        self.curTimeLabel.setObjectName("curTimeLabel")
+        self.horizontalLayout_2.addWidget(self.curTimeLabel)
         spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_2.addItem(spacerItem)
         self.label = QtWidgets.QLabel(VideoAnnoWidget)
@@ -180,11 +179,10 @@ class Ui_VideoAnnoWidget(object):
     def retranslateUi(self, VideoAnnoWidget):
         _translate = QtCore.QCoreApplication.translate
         VideoAnnoWidget.setWindowTitle(_translate("VideoAnnoWidget", "Form"))
-        self.curTimeLabel.setText(_translate("VideoAnnoWidget", "00:00:00"))
-        self.remTimeLabel.setText(_translate("VideoAnnoWidget", "00:00:00"))
         self.playButton.setToolTip(_translate("VideoAnnoWidget", "Play / Pause Video"))
         self.stepBackwardButton.setToolTip(_translate("VideoAnnoWidget", "Video Step Backward"))
         self.stepForwardButton.setToolTip(_translate("VideoAnnoWidget", "Video Step Forward"))
+        self.curTimeLabel.setText(_translate("VideoAnnoWidget", "00:00:00"))
         self.label.setText(_translate("VideoAnnoWidget", "Step Size"))
         self.stepSpinBox.setSuffix(_translate("VideoAnnoWidget", " ms"))
         self.label_3.setText(_translate("VideoAnnoWidget", "Label"))
@@ -200,6 +198,7 @@ class Ui_VideoAnnoWidget(object):
         self.addSegmentButton.setToolTip(_translate("VideoAnnoWidget", "Add New Segment"))
         self.delSegmentButton.setToolTip(_translate("VideoAnnoWidget", "Delete Selected Segment"))
 from PyQt5.QtMultimediaWidgets import QVideoWidget
+from widgets import SegmentColorBar
 
 
 if __name__ == "__main__":

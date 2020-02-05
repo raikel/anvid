@@ -4,7 +4,7 @@ from typing import Tuple
 
 from PyQt5 import QtWidgets
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QFileDialog, QListWidgetItem, QAbstractItemView
+from PyQt5.QtWidgets import QFileDialog, QListWidgetItem
 
 import values
 from applog import logger
@@ -12,8 +12,7 @@ from projects import Project, VideoAnn
 from settings import (
     AppSettings,
     MAX_RECENT_FILES,
-    PROJECT_FILE_EXT,
-    VIDEO_EXTENSIONS
+    PROJECT_FILE_EXT
 )
 from ui_mainwindow import Ui_MainWindow
 from video import VideoAnnoWidget

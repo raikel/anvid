@@ -10,7 +10,6 @@ from applog import logger
 from projects import VideoAnn
 from ui_videoannwidget import Ui_VideoAnnoWidget
 
-
 # https://stackoverflow.com/questions/45537627/qwidgetpaintengine-should-no-longer-be-called-appears-when-using-qmediaplay
 
 
@@ -49,8 +48,8 @@ class VideoAnnoWidget(QWidget):
         ui.delSegmentButton.clicked.connect(self.onDelSegment)
         ui.getStartTimeButton.clicked.connect(self.onGrabStartTime)
         ui.getEndTimeButton.clicked.connect(self.onGrabEndTime)
-        ui.segmentListWidget.itemSelectionChanged.connect(
-            self.onItemSelectionChanged
+        ui.segmentListWidget.itemClicked.connect(
+            self.onItemClicked
         )
         ui.stepForwardButton.clicked.connect(self.onStepForward)
         ui.stepBackwardButton.clicked.connect(self.onStepBackward)
@@ -115,6 +114,7 @@ class VideoAnnoWidget(QWidget):
             self.ui.labelLineEdit.setText(self._videoAnn.label)
             self.ui.stepSpinBox.setValue(self._videoAnn.step)
             self.updateSegmentList()
+            self.updateTimeLabels()
             return
 
         state = self.player.state()
@@ -142,6 +142,7 @@ class VideoAnnoWidget(QWidget):
         self._videoAnn = videoAnn
 
         self.updateSegmentList()
+        self.selectedItemUpdated()
 
     def videoPlayPause(self):
         if self.player.state() == QMediaPlayer.PlayingState:
@@ -160,16 +161,14 @@ class VideoAnnoWidget(QWidget):
     def onPlayerPositionChanged(self, position):
         self.ui.positionSlider.setValue(position)
         curTime = int(position/1000)
-        remTime = int((self.player.duration() - position) / 1000)
         curTime = str(timedelta(seconds=curTime))
-        remTime = str(timedelta(seconds=remTime))
         self.ui.curTimeLabel.setText(curTime)
-        self.ui.remTimeLabel.setText(remTime)
         self._videoAnn.videoPosition = position
 
     def onPlayerDurationChanged(self, duration):
         self.ui.positionSlider.setRange(0, duration)
         self._videoAnn.duration = duration
+        self.ui.segmentColorBar.length = duration
 
     def onSliderMoved(self, position):
         self.player.setPosition(position)
@@ -182,15 +181,17 @@ class VideoAnnoWidget(QWidget):
 
     def onAddSegment(self):
         self._videoAnn.segments.append([-1, -1])
-        self._videoAnn.selSegmentInd = len(self._videoAnn.segments) - 1
         self.updateSegmentList()
+        self._videoAnn.selSegmentInd = len(self._videoAnn.segments) - 1
+        self.selectedItemUpdated()
 
     def onDelSegment(self):
         selSegmentInd = self._videoAnn.selSegmentInd
         del self._videoAnn.segments[selSegmentInd]
+        self.updateSegmentList()
         if selSegmentInd > len(self._videoAnn.segments) - 1:
             self._videoAnn.selSegmentInd = len(self._videoAnn.segments) - 1
-        self.updateSegmentList()
+        self.selectedItemUpdated()
 
     def onGrabStartTime(self):
         selSegmentInd = self._videoAnn.selSegmentInd
@@ -198,7 +199,11 @@ class VideoAnnoWidget(QWidget):
         selSegment[0] = self.player.position()
         if selSegment[1] < selSegment[0]:
             selSegment[1] = selSegment[0]
-        self.updateSegmentList()
+        item = self.ui.segmentListWidget.item(selSegmentInd)
+        start, end = self.formatSegment(selSegment)
+        item.setText(f'{start} -> {end}')
+        self.updateTimeLabels()
+        self.ui.segmentColorBar.segments = self._videoAnn.segments
 
     def onGrabEndTime(self):
         selSegmentInd = self._videoAnn.selSegmentInd
@@ -206,13 +211,35 @@ class VideoAnnoWidget(QWidget):
         selSegment[1] = self.player.position()
         if selSegment[1] < selSegment[0]:
             selSegment[0] = selSegment[1]
-        self.updateSegmentList()
+        item = self.ui.segmentListWidget.item(selSegmentInd)
+        start, end = self.formatSegment(selSegment)
+        item.setText(f'{start} -> {end}')
+        self.updateTimeLabels()
+        self.ui.segmentColorBar.segments = self._videoAnn.segments
 
-    def onItemSelectionChanged(self):
+    def onItemClicked(self):
         selSegmentInd = self.ui.segmentListWidget.currentRow()
         if selSegmentInd < len(self._videoAnn.segments):
             self._videoAnn.selSegmentInd = selSegmentInd
-            self.updateTimeLabels()
+            self.selectedItemUpdated()
+
+    def selectedItemUpdated(self):
+        selSegmentInd = self._videoAnn.selSegmentInd
+        self.ui.segmentListWidget.setCurrentRow(selSegmentInd)
+
+        if selSegmentInd < 0:
+            self.ui.delSegmentButton.setDisabled(True)
+            self.ui.getStartTimeButton.setDisabled(True)
+            self.ui.getEndTimeButton.setDisabled(True)
+        else:
+            self.ui.delSegmentButton.setDisabled(False)
+            self.ui.getStartTimeButton.setDisabled(False)
+            self.ui.getEndTimeButton.setDisabled(False)
+            selSegment = self._videoAnn.segments[selSegmentInd]
+            if selSegment[0] >= 0:
+                self.player.setPosition(selSegment[0])
+
+        self.updateTimeLabels()
 
     def updateTimeLabels(self):
         selSegmentInd = self._videoAnn.selSegmentInd
@@ -226,12 +253,9 @@ class VideoAnnoWidget(QWidget):
             start, end = self.formatSegment(selSegment)
             self.ui.startTimeLabel.setText(start)
             self.ui.endTimeLabel.setText(end)
-            if selSegment[0] >= 0 and selSegment[1] >= 0:
-                self.player.setPosition(int(selSegment[0]))
 
     def updateSegmentList(self):
         segmentListWidget = self.ui.segmentListWidget
-        selSegmentInd = self._videoAnn.selSegmentInd
 
         segmentListWidget.clear()
         for segment in self._videoAnn.segments:
@@ -239,18 +263,7 @@ class VideoAnnoWidget(QWidget):
             item = QListWidgetItem(f'{start} -> {end}')
             segmentListWidget.addItem(item)
 
-        if selSegmentInd < 0:
-            self.ui.delSegmentButton.setDisabled(True)
-            self.ui.getStartTimeButton.setDisabled(True)
-            self.ui.getEndTimeButton.setDisabled(True)
-        else:
-            self.ui.delSegmentButton.setDisabled(False)
-            self.ui.getStartTimeButton.setDisabled(False)
-            self.ui.getEndTimeButton.setDisabled(False)
-            item = segmentListWidget.item(selSegmentInd)
-            segmentListWidget.setCurrentItem(item)
-
-        self.updateTimeLabels()
+        self.ui.segmentColorBar.segments = self._videoAnn.segments
 
     @staticmethod
     def formatSegment(segment):
