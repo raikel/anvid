@@ -5,6 +5,7 @@ anvid/.data/
 anvid/.logs/
 projects/
 recycle/
+**/_private/
 *.log
 clean_migrations.sh
 gitpush.sh
