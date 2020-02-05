@@ -20,7 +20,7 @@ A PyQt5-based GUI application to make temporal annotations on videos for trainin
 Installation
 ============
 
-Before you are ready to run Anvid, ensure you have `Python 3.7` or later on your system as well the latest pip version. We recommend to run Anvid within a python virtual environment for easier management. If you don't have a virtual environment already created, create a new one by issuing the following commands within a directory of your choice:
+Before you are ready to run Anvid, ensure you have ``Python 3.7`` or later on your system as well the latest pip version. We recommend to run Anvid within a python virtual environment for easier management. If you don't have a virtual environment already created, create a new one by issuing the following commands within a directory of your choice:
 
 .. code-block:: bash
 

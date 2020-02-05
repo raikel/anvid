@@ -196,12 +196,16 @@ class VideoAnnoWidget(QWidget):
         selSegmentInd = self._videoAnn.selSegmentInd
         selSegment = self._videoAnn.segments[selSegmentInd]
         selSegment[0] = self.player.position()
+        if selSegment[1] < selSegment[0]:
+            selSegment[1] = selSegment[0]
         self.updateSegmentList()
 
     def onGrabEndTime(self):
         selSegmentInd = self._videoAnn.selSegmentInd
         selSegment = self._videoAnn.segments[selSegmentInd]
         selSegment[1] = self.player.position()
+        if selSegment[1] < selSegment[0]:
+            selSegment[0] = selSegment[1]
         self.updateSegmentList()
 
     def onItemSelectionChanged(self):
@@ -251,8 +255,6 @@ class VideoAnnoWidget(QWidget):
     @staticmethod
     def formatSegment(segment):
         start, end = segment
-        if (end >= 0 and start >= 0) and end < start:
-            end = start = 0
         start = max(0, start)
         end = max(0, end)
         return _formatTimeDelta(start), _formatTimeDelta(end)
