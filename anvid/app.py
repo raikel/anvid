@@ -160,16 +160,20 @@ class MainWindow(QtWidgets.QMainWindow):
             videoPaths = list_files(
                 dirPath, self.appSettings.videoExt, recursive=True
             )
-            if len(videoPaths):
+            videoPaths.sort()
+            nVideos = len(videoPaths)
+            if nVideos:
                 for videoPath in videoPaths:
                     videoAnn = VideoAnn(videoPath=videoPath)
                     project.videosAnn[videoPath] = videoAnn
                 self.initVideoList()
                 self.project.empty = False
+                self.statusBar().showMessage(f'{nVideos} loaded')
             else:
                 self.ui.warnMsg(
                     f'Could not find any video file on directory {dirPath}.'
                 )
+
 
     def delVideos(self):
         items = self.ui.videoListWidget.selectedItems()
@@ -268,6 +272,8 @@ class MainWindow(QtWidgets.QMainWindow):
         videoPath = list(self.project.videosAnn.keys())[ind]
         self.videoAnnoWidget.videoAnn = self.project.videosAnn[videoPath]
         self.project.selectVideoInd = ind
+        nVideos = len(self.project.videosAnn)
+        self.statusBar().showMessage(f'Showing video {ind} of {nVideos}')
 
     def export(self):
         savePath, _ = QFileDialog.getSaveFileName(

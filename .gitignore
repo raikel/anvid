@@ -7,6 +7,7 @@ projects/
 recycle/
 **/_private/
 *.log
+TODO.md
 clean_migrations.sh
 gitpush.sh
 __pycache__
